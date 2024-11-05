@@ -39,16 +39,16 @@ impl Proxctl {
 
         // Schritt 2: Parameter für die neue VM festlegen
         let new_vm_data = json!({
-        "vmid": self.vm_id.clone(),
-        "name": "tester",
-        "memory": 2048,            // Arbeitsspeicher in MB
-        "sockets": 1,              // Anzahl der Sockets
-        "cores": 2,                // Anzahl der CPU-Kerne pro Socket
-        "storage": "local-lvm",        // Speichername (z.B. "local")
-        "ide0": "local:iso/Fedora-Server-netinst-x86_64-41-1.4.iso,media=cdrom",  // Pfad zur ISO-Datei im Speicher
-        "ide1": "local-lvm:32",        // Festplattengröße in GB
-        "net0": "virtio,bridge=vmbr0" // Netzwerkgerät und Bridge
-    });
+            "vmid": self.vm_id.clone(),
+            "name": "tester",
+            "memory": 2048,            // Arbeitsspeicher in MB
+            "sockets": 1,              // Anzahl der Sockets
+            "cores": 2,                // Anzahl der CPU-Kerne pro Socket
+            "storage": "local-lvm",        // Speichername (z.B. "local")
+            "ide0": "local:iso/Fedora-Server-netinst-x86_64-41-1.4.iso,media=cdrom",  // Pfad zur ISO-Datei im Speicher
+            "ide1": "local-lvm:32",        // Festplattengröße in GB
+            "net0": "virtio,bridge=vmbr0" // Netzwerkgerät und Bridge
+        });
 
         // Schritt 3: Neue VM erstellen
         let create_vm_url = format!("{}/nodes/{}/qemu", self.prox_url, self.node_name);
