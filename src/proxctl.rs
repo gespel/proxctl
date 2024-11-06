@@ -6,21 +6,27 @@ pub(crate) struct Proxctl {
     username: String,
     password: String,
     node_name: String,
-    vm_id: String,
 }
 
 impl Proxctl {
-    pub(crate) fn new(prox_url: &str, username: &str, password: &str, node_name: &str, vm_id: &str) -> Proxctl {
+    pub(crate) fn new(prox_url: &str, username: &str, password: &str, node_name: &str) -> Proxctl {
         Proxctl {
             prox_url: prox_url.to_string(),
             username: username.to_string(),
             password: password.to_string(),
             node_name: node_name.to_string(),
-            vm_id: vm_id.to_string(),
         }
     }
 
-    pub(crate) async fn create_new_vm(&self) {
+    pub(crate) async fn create_new_vm(
+        &self,
+        vm_id: &str,
+        name: &str,
+        cores: usize,
+        memory_size: usize,
+        image: &str,
+        hard_drive_size: usize
+    ) {
         let client = Client::builder()
             .danger_accept_invalid_certs(true) // Nur für Tests, nicht für die Produktion empfohlen
             .build().unwrap();
@@ -39,14 +45,14 @@ impl Proxctl {
 
         // Schritt 2: Parameter für die neue VM festlegen
         let new_vm_data = json!({
-            "vmid": self.vm_id.clone(),
-            "name": "tester",
-            "memory": 2048,            // Arbeitsspeicher in MB
+            "vmid": vm_id,
+            "name": name,
+            "memory": memory_size,            // Arbeitsspeicher in MB
             "sockets": 1,              // Anzahl der Sockets
-            "cores": 2,                // Anzahl der CPU-Kerne pro Socket
+            "cores": cores,                // Anzahl der CPU-Kerne pro Socket
             "storage": "local-lvm",        // Speichername (z.B. "local")
-            "ide0": "local:iso/Fedora-Server-netinst-x86_64-41-1.4.iso,media=cdrom",  // Pfad zur ISO-Datei im Speicher
-            "ide1": "local-lvm:32",        // Festplattengröße in GB
+            "ide0": format!("local:iso/{},media=cdrom", image),  // Pfad zur ISO-Datei im Speicher
+            "ide1": format!("local-lvm:{}", hard_drive_size),        // Festplattengröße in GB
             "net0": "virtio,bridge=vmbr0" // Netzwerkgerät und Bridge
         });
 

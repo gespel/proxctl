@@ -9,10 +9,9 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let username = "root@pam"; // z.B. "root@pam"
     let password = "";
     let node_name = "proxmox1"; // Name des Nodes im Proxmox-Cluster
-    let vm_id = "103"; // ID der neuen VM
 
-    let pc = proxctl::Proxctl::new(proxmox_url, username, password, node_name, vm_id);
-    pc.create_new_vm().await;
+    let pc = proxctl::Proxctl::new(proxmox_url, username, password, node_name);
+    pc.create_new_vm("102", "testfedora", 2, 8192, "fedora.iso", 32).await;
 
     Ok(())
 }
